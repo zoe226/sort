@@ -39,17 +39,75 @@ void bubble_sort(int arr[], int len)
     }
 }
 
+void quicksort(int arr[], int leftend, int rightend)
+{
+    if(leftend >= rightend) return;
+    int leftcursor = leftend;   //从左到右移动的索引
+    int rightcursor = rightend + 1; //从右到左移动的索引
+    int pivot = arr[leftend];
+    // 将位于左侧不小于支点的元素和位于右侧不大于支点的元素交换
+    while(true)
+    {
+        do
+        {//寻找左侧不小于支点的元素
+            leftcursor ++;
+        }while(arr[leftcursor] < pivot);
+
+        do
+        {//寻找右侧不大于支点的元素
+            rightcursor --;
+        }while(arr[rightcursor] > pivot);
+
+        if(leftcursor >= rightcursor) break; //没有找到交换的元素对
+        swap(arr[leftcursor], arr[rightcursor]);
+    }
+
+    //放置支点
+    arr[leftend] = arr[rightcursor];
+    arr[rightcursor] = pivot;
+
+    for(int i = leftend; i <= rightend; i++)
+        cout << "arr[" << i << "]=" << arr[i] << "   ";
+    cout << endl;
+    quicksort(arr, leftend, rightcursor - 1);  //对左段的数段排序
+    quicksort(arr, rightcursor + 1, rightend); //对右段的数段排序
+}
+
+
+void quick_sort(int arr[], int len)
+{
+    if(len <= 1) return;
+    int max = arr[0];
+    int indexofmax = 0;
+    for(int i = 1; i < len; i++)
+    {
+        if(arr[i] > max)
+        {
+            max = arr[i];
+            indexofmax = i;
+        }
+    }
+    cout << "indexofmax = " << indexofmax << endl;
+    if(indexofmax < len - 1)
+        swap(arr[len - 1], arr[indexofmax]);
+    print_array(arr, len);
+    quicksort(arr, 0, len - 2);
+}
+
 int main(int argc, char *argv[])
 {
-    const int LEN = 100;
+    const int LEN = 8;
 
 __TIC__(ALLTIME)
 
     int arr[LEN] = {0};
+    int arr2[LEN] = {4,2,3,7,1,5,6,8};
+    int arr1[LEN] = {0};
     srand(unsigned(time(0)));
     for(int i = 0; i < LEN; i++)
     {
         arr[i] = rand() % 100 + 1;
+        arr1[i] = rand() % 100 + 1;
     }
 
     cout << "Before sort:" << endl;
@@ -61,6 +119,18 @@ __TOC__(BUBBLESORT)
 
     cout << "After sort:" << endl;
     print_array(arr, LEN);
+
+    cout << endl;
+
+    cout << "Before sort:" << endl;
+    print_array(arr2, LEN);
+
+__TIC__(QUICKSORT)
+    quick_sort(arr2, LEN);
+__TOC__(QUICKSORT)
+
+    cout << "After sort:" << endl;
+    print_array(arr2, LEN);
 
 __TOC__(ALLTIME)
 
